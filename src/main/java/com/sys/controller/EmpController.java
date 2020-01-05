@@ -34,7 +34,7 @@ public class EmpController {
     public Map empAdd(Emp emp, String roleIds) {
         try {
             this.service.empAdd(emp, roleIds);
-            return ajaxReturn(true, "操作成功");
+            return ajaxReturn(true, "操作成功 ");
         } catch (Exception localException) {
         }
         return ajaxReturn(false, "操作失败");

@@ -1,0 +1,41 @@
+/*-------------------------------------
+zTree Style
+
+version:	3.4
+author:		Hunter.z
+email:		hunter.z@263.net
+website:	http://code.google.com/p/jquerytree/
+
+-------------------------------------*/
+.ztree * {padding:0; margin:0; font-size:14px;font-family: Verdana, Arial,"宋体";}
+.ztree {margin:4px 0; padding: 0px;line-height:32px;position:relative;_line-height:15px;}
+.ztree li ul {padding:2px 0;*float:left;}
+.ztree li {text-align:left;white-space:nowrap;outline:0; /*_position: relative*/  _line-height:15px;}
+.ztree li a {width:190px;height:30px;line-height:30px;padding-left:5px;cursor:pointer;color:#333;text-decoration:none;vertical-align:top;display:inline-block;
+_display:inline-block;_height:15px;_padding:11px 0 4px 5px;_line-height:15px;}
+.ztree li a:hover {background:#DFEFFF;text-decoration:none;}
+
+.ztree li a.curSelectedNode {width:186px;background:url(../images/newImg/icon.png) 0 -816px;_background:#f7f7f7;}
+.ztree li a.curSelectedNode_Edit {padding-top:0px; background:#FFE6B0; color:black; height:16px; border:1px #FFB951 solid; opacity:0.8;}
+.ztree li a.curSelectedNode span#tree_folder_1_span {color:#333;}
+.ztree li a.curSelectedNode span.num {color:#fff;}
+
+.ztree.showIcon li span.button.switch {visibility:visible;}
+.ztree li span {margin-right:2px}
+.ztree li span.button {width:16px;height:16px;display:inline-block;vertical-align:middle;cursor: pointer;outline:none;background:url(../images/newImg/icon.png) no-repeat;_background:url(../images/newImg/icon.gif) 0 0 no-repeat;}
+.ztree li span.button.switch {width:16px;height:16px;visibility:hidden;_visibility: visible;}
+.ztree li span.button.noline_close{background-position:-164px -641px;}
+.ztree li span.button.noline_open{background-position:-203px -641px;*background-position:-203px -641px;}
+
+.ztree li span.button.switch.level0 {}
+.ztree li span.button.switch.level1 {width: 20px; height:20px}
+.ztree li a span.nums{height:15px;line-height:16px;font-family:Arial;font-size:12px;color:#fff;padding:0 4px;margin:7px 8px 0 0;_margin-top:22px;*margin-top:2px;_margin:-2px 5px 0 0;float:right;border-radius:4px 4px 4px 4px;position: absolute;right: 0px;}
+.ztree li a span.nums.empty {display:none;}
+
+.ztree li ul li a.level2 span#tree_other_3_span, .ztree li ul li a.level2 span#tree_other_4_span, .ztree li ul li a.level2 span#tree_other_5_span  {margin-left:10px;}
+
+/****针对火狐浏览器****确保在底部*****/
+@-moz-document url-prefix(){
+.ztree li a span.nums {/*margin-top:-22px;*/}
+}
+

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>角色列表页面</title>
+		<!-- 导入jquery核心类库 -->
+		<script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+		<!-- 导入easyui类库 -->
+		<link rel="stylesheet" type="text/css" th:href="@{/js/easyui/themes/default/easyui.css}">
+		<link rel="stylesheet" type="text/css" th:href="@{/js/easyui/themes/icon.css}">
+		<link rel="stylesheet" type="text/css" th:href="@{/js/easyui/ext/portal.css}">
+		<link rel="stylesheet" type="text/css" th:href="@{/css/default.css}">
+		<script type="text/javascript" th:src="@{/js/easyui/jquery.easyui.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/easyui/ext/jquery.portal.js}"></script>
+		<script type="text/javascript" th:src="@{/js/easyui/ext/jquery.cookie.js}"></script>
+		<script th:src="@{/js/easyui/locale/easyui-lang-zh_CN.js}" type="text/javascript"></script>
+		<!-- 导入ztree类库 -->
+		<link rel="stylesheet" th:href="@{/js/ztree/zTreeStyle.css}" type="text/css" />
+		<script th:src="@{/js/ztree/jquery.ztree.all-3.5.js}" type="text/javascript"></script>
+		<script type="text/javascript" th:inline="none">
+			//动态按钮
+			function checkPermission() {
+				var pers = [];
+				console.log(localStorage.permission);
+				var permissions = jQuery.parseJSON(localStorage.permission);
+				$("[permission]").each(function() {
+					var per = $(this).attr("permission");
+					if ($.inArray(per, permissions) >= 0) {
+						$(this).show();
+					}
+				});
+				return pers;
+			}
+
+			function doDelete(){
+				var rowDatas = $("#grid").datagrid("getSelections");
+				if(rowDatas.length==0){
+					$.messager.alert("提示","请选项需要删除的数据");
+				}else{
+					$.messager.confirm("提示","是否要删除选择的数据?",function(r){
+						if(r){
+							//获取选中数据的id
+							var ids  = new Array();
+							for (var i = 0; i < rowDatas.length; i++) {
+								ids.push(rowDatas[i].id);
+							}
+							$.ajax({
+								url: "/role/delete",
+								type: "post",
+								contentType: "application/json; charset=utf-8",
+								data:JSON.stringify({roleIds:ids}),
+								dataType: "json",
+								success: function(data){
+									if (data.code == '200') {
+										$.messager.alert("提示", data.msg,"info",function () {
+											$('#grid').datagrid('reload');
+											$("#grid").datagrid("clearChecked");
+										});
+									}else{
+										$.messager.alert("提示", data.msg);
+									}
+								}
+							})
+						}
+					})
+				}
+			}
+
+			function doEdit(){
+				var arr = $("#grid").datagrid("getSelections");
+				if(arr.length != 1){
+					$.messager.alert("提示","请选择一条要修改的数据!");
+					return;
+				}
+
+				location.href='/role/edit?id='+arr[0].id;
+			}
+			function doAdd(){
+				location.href='/role/add';
+			}
+
+			$(function(){
+
+				checkPermission();
+				// 数据表格属性
+				$("#grid").datagrid({
+					url : '/role/list',
+					pageList: [10,20],
+					pagination : true,
+					columns : [[{
+							field : '-',
+							checkbox : true
+					    },
+						{
+							field : 'id',
+							title : '编号',
+							width : 200
+						},
+						{
+							field : 'name',
+							title : '名称',
+							width : 200
+						},
+						{
+							field : 'description',
+							title : '描述',
+							width : 200
+						}
+					]]
+				});
+			});
+		</script>
+	</head>
+
+	<body class="easyui-layout">
+		<div data-options="region:'center'">
+			<div id="tb">
+				<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:doAdd()" style="display: none" permission="sys:role:add">新增</a>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="javascript:doEdit()" style="display: none" permission="sys:role:edit">查看修改角色</a>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" plain="true" onclick="javascript:doDelete()" style="display: none" permission="sys:role:del">删除</a>
+			</div>
+			<table id="grid"></table>
+		</div>
+	</body>
+
+</html>

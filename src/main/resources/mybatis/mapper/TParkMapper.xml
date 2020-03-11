@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sys.dao.TParkMapper" >
+
+    <resultMap id="BaseResultMap" type="com.sys.entity.TPark" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="park_name" property="park_name" jdbcType="VARCHAR" />
+        <result column="park_type" property="park_type" jdbcType="VARCHAR" />
+        <result column="park_price" property="park_price" jdbcType="DECIMAL" />
+        <result column="park_status" property="park_status" jdbcType="VARCHAR" />
+        <result column="park_des" property="park_des" jdbcType="VARCHAR" />
+        <result column="license_plate" property="license_plate" jdbcType="VARCHAR" />
+        <result column="order_id" property="order_id" jdbcType="INTEGER" />
+        <result column="bak1" property="bak1" jdbcType="VARCHAR" />
+        <result column="bak2" property="bak2" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <sql id="Update_By_Example_Where_Clause" >
+        <where >
+            <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <sql id="Base_Column_List" >
+        id, park_name, park_type, park_price, park_status, park_des, license_plate, order_id,
+        bak1, bak2
+    </sql>
+
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sys.entity.TParkExample" >
+        select
+        <if test="distinct" >
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List" />
+        from t_park
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from t_park
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from t_park
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByExample" parameterType="com.sys.entity.TParkExample" >
+        delete from t_park
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+    </delete>
+
+    <insert id="insert" parameterType="com.sys.entity.TPark" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_park (park_name, park_type, park_price,
+        park_status, park_des, license_plate,
+        order_id, bak1, bak2
+        )
+        values (#{park_name,jdbcType=VARCHAR}, #{park_type,jdbcType=VARCHAR}, #{park_price,jdbcType=DECIMAL},
+        #{park_status,jdbcType=VARCHAR}, #{park_des,jdbcType=VARCHAR}, #{license_plate,jdbcType=VARCHAR},
+        #{order_id,jdbcType=INTEGER}, #{bak1,jdbcType=VARCHAR}, #{bak2,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.sys.entity.TPark" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_park
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="park_name != null" >
+                park_name,
+            </if>
+            <if test="park_type != null" >
+                park_type,
+            </if>
+            <if test="park_price != null" >
+                park_price,
+            </if>
+            <if test="park_status != null" >
+                park_status,
+            </if>
+            <if test="park_des != null" >
+                park_des,
+            </if>
+            <if test="license_plate != null" >
+                license_plate,
+            </if>
+            <if test="order_id != null" >
+                order_id,
+            </if>
+            <if test="bak1 != null" >
+                bak1,
+            </if>
+            <if test="bak2 != null" >
+                bak2,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="park_name != null" >
+                #{park_name,jdbcType=VARCHAR},
+            </if>
+            <if test="park_type != null" >
+                #{park_type,jdbcType=VARCHAR},
+            </if>
+            <if test="park_price != null" >
+                #{park_price,jdbcType=DECIMAL},
+            </if>
+            <if test="park_status != null" >
+                #{park_status,jdbcType=VARCHAR},
+            </if>
+            <if test="park_des != null" >
+                #{park_des,jdbcType=VARCHAR},
+            </if>
+            <if test="license_plate != null" >
+                #{license_plate,jdbcType=VARCHAR},
+            </if>
+            <if test="order_id != null" >
+                #{order_id,jdbcType=INTEGER},
+            </if>
+            <if test="bak1 != null" >
+                #{bak1,jdbcType=VARCHAR},
+            </if>
+            <if test="bak2 != null" >
+                #{bak2,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="countByExample" parameterType="com.sys.entity.TParkExample" resultType="java.lang.Integer" >
+        select count(*) from t_park
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+    </select>
+
+    <update id="updateByExampleSelective" parameterType="map" >
+        update t_park
+        <set >
+            <if test="record.id != null" >
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.park_name != null" >
+                park_name = #{record.park_name,jdbcType=VARCHAR},
+            </if>
+            <if test="record.park_type != null" >
+                park_type = #{record.park_type,jdbcType=VARCHAR},
+            </if>
+            <if test="record.park_price != null" >
+                park_price = #{record.park_price,jdbcType=DECIMAL},
+            </if>
+            <if test="record.park_status != null" >
+                park_status = #{record.park_status,jdbcType=VARCHAR},
+            </if>
+            <if test="record.park_des != null" >
+                park_des = #{record.park_des,jdbcType=VARCHAR},
+            </if>
+            <if test="record.license_plate != null" >
+                license_plate = #{record.license_plate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.order_id != null" >
+                order_id = #{record.order_id,jdbcType=INTEGER},
+            </if>
+            <if test="record.bak1 != null" >
+                bak1 = #{record.bak1,jdbcType=VARCHAR},
+            </if>
+            <if test="record.bak2 != null" >
+                bak2 = #{record.bak2,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null" >
+            <include refid="Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+    <update id="updateByExample" parameterType="map" >
+        update t_park
+        set id = #{record.id,jdbcType=INTEGER},
+        park_name = #{record.park_name,jdbcType=VARCHAR},
+        park_type = #{record.park_type,jdbcType=VARCHAR},
+        park_price = #{record.park_price,jdbcType=DECIMAL},
+        park_status = #{record.park_status,jdbcType=VARCHAR},
+        park_des = #{record.park_des,jdbcType=VARCHAR},
+        license_plate = #{record.license_plate,jdbcType=VARCHAR},
+        order_id = #{record.order_id,jdbcType=INTEGER},
+        bak1 = #{record.bak1,jdbcType=VARCHAR},
+        bak2 = #{record.bak2,jdbcType=VARCHAR}
+        <if test="_parameter != null" >
+            <include refid="Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sys.entity.TPark" >
+        update t_park
+        <set >
+            <if test="park_name != null" >
+                park_name = #{park_name,jdbcType=VARCHAR},
+            </if>
+            <if test="park_type != null" >
+                park_type = #{park_type,jdbcType=VARCHAR},
+            </if>
+            <if test="park_price != null" >
+                park_price = #{park_price,jdbcType=DECIMAL},
+            </if>
+            <if test="park_status != null" >
+                park_status = #{park_status,jdbcType=VARCHAR},
+            </if>
+            <if test="park_des != null" >
+                park_des = #{park_des,jdbcType=VARCHAR},
+            </if>
+            <if test="license_plate != null" >
+                license_plate = #{license_plate,jdbcType=VARCHAR},
+            </if>
+            <if test="order_id != null" >
+                order_id = #{order_id,jdbcType=INTEGER},
+            </if>
+            <if test="bak1 != null" >
+                bak1 = #{bak1,jdbcType=VARCHAR},
+            </if>
+            <if test="bak2 != null" >
+                bak2 = #{bak2,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.sys.entity.TPark" >
+        update t_park
+        set park_name = #{park_name,jdbcType=VARCHAR},
+            park_type = #{park_type,jdbcType=VARCHAR},
+            park_price = #{park_price,jdbcType=DECIMAL},
+            park_status = #{park_status,jdbcType=VARCHAR},
+            park_des = #{park_des,jdbcType=VARCHAR},
+            license_plate = #{license_plate,jdbcType=VARCHAR},
+            order_id = #{order_id,jdbcType=INTEGER},
+            bak1 = #{bak1,jdbcType=VARCHAR},
+            bak2 = #{bak2,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sys.dao.TUserCarMapper" >
+
+    <resultMap id="BaseResultMap" type="com.sys.entity.TUserCar" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="user_id" property="user_id" jdbcType="INTEGER" />
+        <result column="license_plate" property="license_plate" jdbcType="VARCHAR" />
+        <result column="bak1" property="bak1" jdbcType="VARCHAR" />
+        <result column="bak2" property="bak2" jdbcType="VARCHAR" />
+        <result column="bak3" property="bak3" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <sql id="Update_By_Example_Where_Clause" >
+        <where >
+            <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <sql id="Base_Column_List" >
+        id, user_id, license_plate, bak1, bak2, bak3
+    </sql>
+
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sys.entity.TUserCarExample" >
+        select
+        <if test="distinct" >
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List" />
+        from t_user_car
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select 
+        <include refid="Base_Column_List" />
+        from t_user_car
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from t_user_car
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByExample" parameterType="com.sys.entity.TUserCarExample" >
+        delete from t_user_car
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+    </delete>
+
+    <insert id="insert" parameterType="com.sys.entity.TUserCar" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_user_car (user_id, license_plate, bak1, 
+            bak2, bak3)
+        values (#{user_id,jdbcType=INTEGER}, #{license_plate,jdbcType=VARCHAR}, #{bak1,jdbcType=VARCHAR}, 
+            #{bak2,jdbcType=VARCHAR}, #{bak3,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.sys.entity.TUserCar" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_user_car
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="user_id != null" >
+                user_id,
+            </if>
+            <if test="license_plate != null" >
+                license_plate,
+            </if>
+            <if test="bak1 != null" >
+                bak1,
+            </if>
+            <if test="bak2 != null" >
+                bak2,
+            </if>
+            <if test="bak3 != null" >
+                bak3,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="user_id != null" >
+                #{user_id,jdbcType=INTEGER},
+            </if>
+            <if test="license_plate != null" >
+                #{license_plate,jdbcType=VARCHAR},
+            </if>
+            <if test="bak1 != null" >
+                #{bak1,jdbcType=VARCHAR},
+            </if>
+            <if test="bak2 != null" >
+                #{bak2,jdbcType=VARCHAR},
+            </if>
+            <if test="bak3 != null" >
+                #{bak3,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="countByExample" parameterType="com.sys.entity.TUserCarExample" resultType="java.lang.Integer" >
+        select count(*) from t_user_car
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+    </select>
+
+    <update id="updateByExampleSelective" parameterType="map" >
+        update t_user_car
+        <set >
+            <if test="record.id != null" >
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.user_id != null" >
+                user_id = #{record.user_id,jdbcType=INTEGER},
+            </if>
+            <if test="record.license_plate != null" >
+                license_plate = #{record.license_plate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.bak1 != null" >
+                bak1 = #{record.bak1,jdbcType=VARCHAR},
+            </if>
+            <if test="record.bak2 != null" >
+                bak2 = #{record.bak2,jdbcType=VARCHAR},
+            </if>
+            <if test="record.bak3 != null" >
+                bak3 = #{record.bak3,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null" >
+            <include refid="Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+    <update id="updateByExample" parameterType="map" >
+        update t_user_car
+        set id = #{record.id,jdbcType=INTEGER},
+            user_id = #{record.user_id,jdbcType=INTEGER},
+            license_plate = #{record.license_plate,jdbcType=VARCHAR},
+            bak1 = #{record.bak1,jdbcType=VARCHAR},
+            bak2 = #{record.bak2,jdbcType=VARCHAR},
+            bak3 = #{record.bak3,jdbcType=VARCHAR}
+        <if test="_parameter != null" >
+            <include refid="Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sys.entity.TUserCar" >
+        update t_user_car
+        <set >
+            <if test="user_id != null" >
+                user_id = #{user_id,jdbcType=INTEGER},
+            </if>
+            <if test="license_plate != null" >
+                license_plate = #{license_plate,jdbcType=VARCHAR},
+            </if>
+            <if test="bak1 != null" >
+                bak1 = #{bak1,jdbcType=VARCHAR},
+            </if>
+            <if test="bak2 != null" >
+                bak2 = #{bak2,jdbcType=VARCHAR},
+            </if>
+            <if test="bak3 != null" >
+                bak3 = #{bak3,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.sys.entity.TUserCar" >
+        update t_user_car
+        set user_id = #{user_id,jdbcType=INTEGER},
+            license_plate = #{license_plate,jdbcType=VARCHAR},
+            bak1 = #{bak1,jdbcType=VARCHAR},
+            bak2 = #{bak2,jdbcType=VARCHAR},
+            bak3 = #{bak3,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

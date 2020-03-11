@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sys.dao.TOrderMapper" >
+
+    <resultMap id="BaseResultMap" type="com.sys.entity.TOrder" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="license_plate" property="license_plate" jdbcType="VARCHAR" />
+        <result column="park_id" property="park_id" jdbcType="INTEGER" />
+        <result column="start_date" property="start_date" jdbcType="TIMESTAMP" />
+        <result column="end_date" property="end_date" jdbcType="TIMESTAMP" />
+        <result column="license_img" property="license_img" jdbcType="LONGVARCHAR" />
+        <result column="user_id" property="user_id" jdbcType="INTEGER" />
+        <result column="status_cd" property="status_cd" jdbcType="VARCHAR" />
+        <result column="count_money" property="count_money" jdbcType="DECIMAL" />
+        <result column="bak1" property="bak1" jdbcType="VARCHAR" />
+        <result column="bak2" property="bak2" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <sql id="Update_By_Example_Where_Clause" >
+        <where >
+            <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <sql id="Base_Column_List" >
+        id, license_plate, park_id, start_date, end_date, license_img, user_id, status_cd,
+        count_money, bak1, bak2
+    </sql>
+
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sys.entity.TOrderExample" >
+        select
+        <if test="distinct" >
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List" />
+        from t_order
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from t_order
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from t_order
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByExample" parameterType="com.sys.entity.TOrderExample" >
+        delete from t_order
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+    </delete>
+
+    <insert id="insert" parameterType="com.sys.entity.TOrder" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_order (license_plate, park_id, start_date,
+        end_date, license_img, user_id,
+        status_cd, count_money, bak1,
+        bak2)
+        values (#{license_plate,jdbcType=VARCHAR}, #{park_id,jdbcType=INTEGER}, #{start_date,jdbcType=TIMESTAMP},
+        #{end_date,jdbcType=TIMESTAMP}, #{license_img,jdbcType=LONGVARCHAR}, #{user_id,jdbcType=INTEGER},
+        #{status_cd,jdbcType=VARCHAR}, #{count_money,jdbcType=DECIMAL}, #{bak1,jdbcType=VARCHAR},
+        #{bak2,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.sys.entity.TOrder" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_order
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="license_plate != null" >
+                license_plate,
+            </if>
+            <if test="park_id != null" >
+                park_id,
+            </if>
+            <if test="start_date != null" >
+                start_date,
+            </if>
+            <if test="end_date != null" >
+                end_date,
+            </if>
+            <if test="license_img != null" >
+                license_img,
+            </if>
+            <if test="user_id != null" >
+                user_id,
+            </if>
+            <if test="status_cd != null" >
+                status_cd,
+            </if>
+            <if test="count_money != null" >
+                count_money,
+            </if>
+            <if test="bak1 != null" >
+                bak1,
+            </if>
+            <if test="bak2 != null" >
+                bak2,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="license_plate != null" >
+                #{license_plate,jdbcType=VARCHAR},
+            </if>
+            <if test="park_id != null" >
+                #{park_id,jdbcType=INTEGER},
+            </if>
+            <if test="start_date != null" >
+                #{start_date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="end_date != null" >
+                #{end_date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="license_img != null" >
+                #{license_img,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="user_id != null" >
+                #{user_id,jdbcType=INTEGER},
+            </if>
+            <if test="status_cd != null" >
+                #{status_cd,jdbcType=VARCHAR},
+            </if>
+            <if test="count_money != null" >
+                #{count_money,jdbcType=DECIMAL},
+            </if>
+            <if test="bak1 != null" >
+                #{bak1,jdbcType=VARCHAR},
+            </if>
+            <if test="bak2 != null" >
+                #{bak2,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="countByExample" parameterType="com.sys.entity.TOrderExample" resultType="java.lang.Integer" >
+        select count(*) from t_order
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+    </select>
+
+    <update id="updateByExampleSelective" parameterType="map" >
+        update t_order
+        <set >
+            <if test="record.id != null" >
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.license_plate != null" >
+                license_plate = #{record.license_plate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.park_id != null" >
+                park_id = #{record.park_id,jdbcType=INTEGER},
+            </if>
+            <if test="record.start_date != null" >
+                start_date = #{record.start_date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.end_date != null" >
+                end_date = #{record.end_date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.license_img != null" >
+                license_img = #{record.license_img,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="record.user_id != null" >
+                user_id = #{record.user_id,jdbcType=INTEGER},
+            </if>
+            <if test="record.status_cd != null" >
+                status_cd = #{record.status_cd,jdbcType=VARCHAR},
+            </if>
+            <if test="record.count_money != null" >
+                count_money = #{record.count_money,jdbcType=DECIMAL},
+            </if>
+            <if test="record.bak1 != null" >
+                bak1 = #{record.bak1,jdbcType=VARCHAR},
+            </if>
+            <if test="record.bak2 != null" >
+                bak2 = #{record.bak2,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null" >
+            <include refid="Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+    <update id="updateByExample" parameterType="map" >
+        update t_order
+        set id = #{record.id,jdbcType=INTEGER},
+        license_plate = #{record.license_plate,jdbcType=VARCHAR},
+        park_id = #{record.park_id,jdbcType=INTEGER},
+        start_date = #{record.start_date,jdbcType=TIMESTAMP},
+        end_date = #{record.end_date,jdbcType=TIMESTAMP},
+        license_img = #{record.license_img,jdbcType=LONGVARCHAR},
+        user_id = #{record.user_id,jdbcType=INTEGER},
+        status_cd = #{record.status_cd,jdbcType=VARCHAR},
+        count_money = #{record.count_money,jdbcType=DECIMAL},
+        bak1 = #{record.bak1,jdbcType=VARCHAR},
+        bak2 = #{record.bak2,jdbcType=VARCHAR}
+        <if test="_parameter != null" >
+            <include refid="Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sys.entity.TOrder" >
+        update t_order
+        <set >
+            <if test="license_plate != null" >
+                license_plate = #{license_plate,jdbcType=VARCHAR},
+            </if>
+            <if test="park_id != null" >
+                park_id = #{park_id,jdbcType=INTEGER},
+            </if>
+            <if test="start_date != null" >
+                start_date = #{start_date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="end_date != null" >
+                end_date = #{end_date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="license_img != null" >
+                license_img = #{license_img,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="user_id != null" >
+                user_id = #{user_id,jdbcType=INTEGER},
+            </if>
+            <if test="status_cd != null" >
+                status_cd = #{status_cd,jdbcType=VARCHAR},
+            </if>
+            <if test="count_money != null" >
+                count_money = #{count_money,jdbcType=DECIMAL},
+            </if>
+            <if test="bak1 != null" >
+                bak1 = #{bak1,jdbcType=VARCHAR},
+            </if>
+            <if test="bak2 != null" >
+                bak2 = #{bak2,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.sys.entity.TOrder" >
+        update t_order
+        set license_plate = #{license_plate,jdbcType=VARCHAR},
+            park_id = #{park_id,jdbcType=INTEGER},
+            start_date = #{start_date,jdbcType=TIMESTAMP},
+            end_date = #{end_date,jdbcType=TIMESTAMP},
+            license_img = #{license_img,jdbcType=LONGVARCHAR},
+            user_id = #{user_id,jdbcType=INTEGER},
+            status_cd = #{status_cd,jdbcType=VARCHAR},
+            count_money = #{count_money,jdbcType=DECIMAL},
+            bak1 = #{bak1,jdbcType=VARCHAR},
+            bak2 = #{bak2,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

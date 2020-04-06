@@ -161,6 +161,11 @@ public class PayController {
 
     }
 
+    @RequestMapping("wechat")
+    public String wechat(){
+        return "wechat";
+    }
+
 }
 
 

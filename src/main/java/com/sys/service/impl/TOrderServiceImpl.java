@@ -20,15 +20,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @Transactional
@@ -85,6 +83,27 @@ public class TOrderServiceImpl implements TOrderService {
         tUserCarExample.createCriteria().andLicense_plateEqualTo(license_plate);
         List<TUserCar> userCarList = this.tUserCarMapper.selectByExample(tUserCarExample);
         Integer userId = null;
+
+        TPark tPark_yd = this.tParkMapper.selectByPrimaryKey(park_id);
+        if(tPark_yd.getPark_status()!=null && tPark_yd.getPark_status().equals("3")){
+            //车位被预定
+            TUserCarExample tUserCarExample_yd = new TUserCarExample();
+            tUserCarExample_yd.createCriteria().andUser_idEqualTo(Integer.parseInt(tPark_yd.getBak1()));
+            //获取预定用户的车辆信息
+            AtomicBoolean flag = new AtomicBoolean(true);
+            List<TUserCar> userCarList_yd = this.tUserCarMapper.selectByExample(tUserCarExample_yd);
+            String finalLicense_plate = license_plate;
+            userCarList_yd.forEach(p ->{
+                if(p.getLicense_plate().equals(finalLicense_plate)){
+                    flag.set(false);
+                }
+            });
+            if(flag.get()){
+                SysUser sysUser_yd = this.userDao.getById(Long.parseLong(tPark_yd.getBak1()));
+                return Results.failure(282103,"车位已经被"+sysUser_yd.getUsername()+"预定，只可此用户车辆停入");
+            }
+        }
+
         if(userCarList.size()<=0){
             //注册临时用户 账号车牌号 密码111111
             SysUser sysUser = new SysUser();
@@ -144,6 +163,7 @@ public class TOrderServiceImpl implements TOrderService {
         tPark.setPark_status("1");
         tPark.setLicense_plate(null);
         tPark.setOrder_id(null);
+        tPark.setBak1(null);
         this.tParkMapper.updateByPrimaryKey(tPark);
 
         //订单状态改为2车辆出场未付款 计算出需要缴付金额

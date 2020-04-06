@@ -45,7 +45,7 @@
                 striped : true,
                	pageList: [10,20],
                 pagination : true,
-                url : "/park/listByPage",
+                url : "/park/listByPage_yd",
                 idField : 'id',
                 columns : columns
             });
@@ -143,9 +143,6 @@
 
         // 定义列
         var columns = [ [ {
-            field : 'id',
-            checkbox : true
-        },{
             field : 'park_name',
             title : '车位名称',
             width : 200,
@@ -186,20 +183,64 @@
             title : '车位详细',
             width : 300,
             align : 'center'
+        },{
+            field : 'bak1',
+            title : '预定用户',
+            width : 100,
+            align : 'center',formatter:function(data,row, index){
+                if(data!=null){
+                    return row.user.username
+                }
+                return "";
+            }
+        },{
+            field : 'null',
+            title : '操作',
+            width : 100,
+            align : 'center',formatter:function(data,row, index){
+                if(row.park_status=='1'){
+                    return '<a href="#" onclick="park_yd('+row.id+')">预定</a>';
+                }else if(row.park_status=='3'){
+                    if(row.bak2 == 'yes'){
+                        return '<a href="#" onclick="park_yd_cansole('+row.id+')">撤销</a>';
+                    }
+                }
+                return "";
+            }
         }] ];
         /*function image2Base64(img) {
             var reader = new FileReader();
             reader.readAsDataURL(img);
         }*/
+        function park_yd(id) {
+            $.post("/park/park_yd",{id:id},function(data){
+                if (data.code == '200') {
+                    $.messager.alert("提示", data.msg,"info",function () {
+                        $('#grid').datagrid("reload");
+                    });
+                }else{
+                    $.messager.alert("提示", data.msg);
+                }
+            })
+        }
+        function park_yd_cansole(id) {
+            $.post("/park/park_yd_cansole",{id:id},function(data){
+                if (data.code == '200') {
+                    $.messager.alert("提示", data.msg,"info",function () {
+                        $('#grid').datagrid("reload");
+                    });
+                }else{
+                    $.messager.alert("提示", data.msg);
+                }
+            })
+        }
     </script>
 </head>
 
 <body class="easyui-layout" style="visibility:hidden;">
+<a href="#" onclick="park_yd()"></a>
 <div region="center" border="false">
     <div id="tb">
-        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:doAdd()" style="display: none;" permission="sys:park:add">新增</a>
-        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="javascript:doEdit()" style="display: none" permission="sys:park:edit">修改</a>
-        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" plain="true" onclick="javascript:doDelete()" style="display: none" permission="sys:park:del">删除</a>
         <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="javascript:doSearch()" >搜索</a>
     </div>
     <table id="grid"></table>

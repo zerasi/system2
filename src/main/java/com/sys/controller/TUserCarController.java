@@ -64,7 +64,7 @@ public class TUserCarController {
             final File newFile = File.createTempFile(String.valueOf(UUID.randomUUID()), suffix);
             // MultipartFile to File
             multfile.transferTo(newFile);
-
+            System.out.println(newFile.getAbsolutePath());
             //获取登录用户信息
             LoginUser loginUser = (LoginUser) SecurityUtils.getCurrentUserAuthentication().getPrincipal();
 

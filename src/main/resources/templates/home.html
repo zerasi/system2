@@ -41,6 +41,7 @@
 			}
 			
 			function statistics_park(flag,sub){
+				document.head.innerHTML
 				$.post("/park/statistics_park",{flag:flag},function(re_data){
 					if(re_data.code==200){
 						console.log(re_data);

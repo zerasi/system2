@@ -20,6 +20,7 @@ public class TPark extends BaseEntity<Integer>{
      * 价格 15分钟 超出不足15分钟 按15分钟计算
      */
     private BigDecimal park_price;
+    private BigDecimal park_price_big;
 
     /**
      * 1 未使用  2已被使用 3已被预订
@@ -36,5 +37,7 @@ public class TPark extends BaseEntity<Integer>{
     private String license_plate;
 
     private Integer order_id;
+
+    private SysUser user;
 
 }

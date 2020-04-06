@@ -107,15 +107,18 @@
         },{
             field : 'null',
             title : '操作',
-            width : 100,
+            width : 200,
             align : 'center',formatter:function(data,row, index){
                 if(row.status_cd=='2'){
-                    return '<a id="btn" href="#" onclick="doPay('+row.id+')">付款</a>';
+                    return '<a id="btn" href="#" onclick="doPay('+row.id+')">支付包付款</a>|<a href="#" onclick="weixin()">微信支付</a>';
                 }
                 return "";
             }
         }] ];
 
+        function weixin(){
+            window.open('/pay/wechat')
+        }
     </script>
 </head>
 

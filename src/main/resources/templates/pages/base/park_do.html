@@ -36,8 +36,10 @@
                 rowStyler: function(index,row){
                 if (row.park_status == '1'){
                     return 'background-color:#66ff66;font-weight:bold;';
-                }else{
+                }else if (row.park_status == '2'){
                     return 'background-color:#eee;font-weight:bold;';
+                }else if(row.park_status == '3'){
+                    return 'background-color: yellow;font-weight:bold;';
                 }
             }
             });
@@ -176,14 +178,26 @@
             width : 100,
             align : 'center'
         },{
+            field : 'bak1',
+            title : '预定用户',
+            width : 100,
+            align : 'center',formatter:function(data,row, index){
+                if(data!=null){
+                    return row.user.username
+                }
+                return "";
+            }
+        },{
             field : 'null',
-            title : '停靠车辆',
+            title : '操作',
             width : 100,
             align : 'center',formatter:function(data,row, index){
                 if(row.park_status=='1'){
                     return '<a id="btn" href="#" onclick="doPark_in('+row.id+')">车辆进入</a>';
                 }else if(row.park_status=='2'){
                     return '<a id="btn" href="#" onclick="doPark_out('+row.id+','+ row.order_id+')">车辆驶出</a>';
+                }else if(row.park_status=='3'){
+                    return '<a id="btn" href="#" onclick="doPark_in('+row.id+')">车辆进入</a>';
                 }
                 return "";
             }

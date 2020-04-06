@@ -5,15 +5,14 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sys.dao.TOrderMapper;
 import com.sys.dao.TParkMapper;
+import com.sys.dao.UserDao;
 import com.sys.dto.TParkDto;
-import com.sys.entity.TOrder;
-import com.sys.entity.TOrderExample;
-import com.sys.entity.TPark;
-import com.sys.entity.TParkExample;
+import com.sys.entity.*;
 import com.sys.service.TParkService;
 import com.sys.utils.PageResult;
 import com.sys.utils.ResponseCode;
 import com.sys.utils.Results;
+import com.sys.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,12 +35,57 @@ public class TParkServiceImpl implements TParkService {
     @Autowired
     private TOrderMapper tOrderMapper;
 
+    @Autowired
+    private UserDao userDao;
+
     @Override
-    public PageResult getAllParksByPage(Integer offset, Integer rows) {
+    public PageResult getAllParksByPage(Integer offset, Integer rows,TParkExample tParkExample) {
         PageHelper.startPage(offset,rows);
-        Page<TPark> pages = (Page<TPark>)this.tParkMapper.selectByExample(new TParkExample());
-        List<TPark> list =  pages.getResult();
-        return new PageResult(pages.getTotal(), pages.getResult());
+        Page<TPark> pages = (Page<TPark>)this.tParkMapper.selectByExample(tParkExample);
+        List<TPark> list = pages.getResult();
+        list.forEach(p ->{
+            if(p.getBak1()!=null && !"".equals(p.getBak1())){
+                p.setUser(this.userDao.getById(Long.parseLong(p.getBak1())));
+            }
+        });
+        return new PageResult(pages.getTotal(), list);
+    }
+
+    @Override
+    public PageResult getAllParksByPage_yd(Integer offset, Integer rows,TParkExample tParkExample) {
+        PageHelper.startPage(offset,rows);
+        //获取登录用户信息
+        LoginUser loginUser = (LoginUser) SecurityUtils.getCurrentUserAuthentication().getPrincipal();
+        Page<TPark> pages = (Page<TPark>)this.tParkMapper.selectByExample(tParkExample);
+        List<TPark> list = pages.getResult();
+        list.forEach(p ->{
+            if(p.getBak1()!=null && !"".equals(p.getBak1())){
+                p.setUser(this.userDao.getById(Long.parseLong(p.getBak1())));
+                if(p.getBak1().equals(loginUser.getId().toString())){
+                    p.setBak2("yes");
+                }
+            }
+        });
+        return new PageResult(pages.getTotal(), list);
+    }
+
+    @Override
+    public Results park_yd(Integer id) {
+        LoginUser loginUser = (LoginUser) SecurityUtils.getCurrentUserAuthentication().getPrincipal();
+        TPark tPark = this.tParkMapper.selectByPrimaryKey(id);
+        tPark.setBak1(loginUser.getId().toString());
+        tPark.setPark_status("3");
+        this.tParkMapper.updateByPrimaryKey(tPark);
+        return Results.success("预定成功");
+    }
+
+    @Override
+    public Results park_yd_cansole(Integer id) {
+        TPark tPark = this.tParkMapper.selectByPrimaryKey(id);
+        tPark.setBak1(null);
+        tPark.setPark_status("1");
+        this.tParkMapper.updateByPrimaryKey(tPark);
+        return Results.success("取消成功");
     }
 
     @Override
@@ -71,7 +115,13 @@ public class TParkServiceImpl implements TParkService {
     public PageResult getParksDo(Integer offset, Integer rows) {
         PageHelper.startPage(offset,rows);
         Page<TPark> pages = (Page<TPark>)this.tParkMapper.selectByExample(new TParkExample());
-        return new PageResult(pages.getTotal(), pages.getResult());
+        List<TPark> list = pages.getResult();
+        list.forEach(p ->{
+            if(p.getBak1()!=null && !"".equals(p.getBak1())){
+                p.setUser(this.userDao.getById(Long.parseLong(p.getBak1())));
+            }
+        });
+        return new PageResult(pages.getTotal(), list);
     }
 
     @Override

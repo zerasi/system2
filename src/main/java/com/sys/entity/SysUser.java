@@ -17,7 +17,7 @@ public class SysUser extends BaseEntity<Long> {
 	private String phone;
 	private String telephone;
 	private String email;
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
 	private Date birthday;
 	private Integer sex;
 	private Integer status;

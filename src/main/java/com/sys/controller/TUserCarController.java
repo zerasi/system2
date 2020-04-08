@@ -1,5 +1,7 @@
 package com.sys.controller;
 
+import com.sys.dto.TParkDto;
+import com.sys.dto.TUserCarDto;
 import com.sys.entity.LoginUser;
 import com.sys.entity.TOrderExample;
 import com.sys.entity.TUserCar;
@@ -16,10 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -79,6 +78,14 @@ public class TUserCarController {
             e.printStackTrace();
             return Results.failure();
         }
+    }
+
+    @PostMapping(value = "/delete")
+    @ResponseBody
+    @PreAuthorize("hasAuthority('sys:car:do')")
+    @ApiOperation(value = "批量删除车辆", notes = "批量删除车辆")//描述
+    public Results deleteCarByIds(@RequestBody TUserCarDto tUserCar) {
+        return this.tUserCarService.deleteCarByIds(tUserCar.getCarIds());
     }
 
     /**

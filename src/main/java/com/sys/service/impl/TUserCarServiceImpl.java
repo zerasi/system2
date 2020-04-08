@@ -83,4 +83,12 @@ public class TUserCarServiceImpl implements TUserCarService {
         this.tUserCarMapper.updateByPrimaryKeySelective(tUserCar);
         return Results.success();
     }
+
+    @Override
+    public Results deleteCarByIds(List<Integer> carIds) {
+        carIds.forEach( p ->{
+            this.tUserCarMapper.deleteByPrimaryKey(p);
+        });
+        return Results.success();
+    }
 }

@@ -45,7 +45,7 @@ public class TParkController {
             criteria.andPark_priceLessThanOrEqualTo(tPark.getPark_price_big());
         }
         request.countOffset();
-        return tParkService.getAllParksByPage_yd(request.getOffset(),request.getRows(),tParkExample);
+        return tParkService.getAllParksByPage_yd(request.getPage(),request.getRows(),tParkExample);
     }
 
     @PostMapping("/listByPage")
@@ -69,7 +69,7 @@ public class TParkController {
             criteria.andPark_priceLessThanOrEqualTo(tPark.getPark_price_big());
         }
         request.countOffset();
-        return tParkService.getAllParksByPage(request.getOffset(),request.getRows(),tParkExample);
+        return tParkService.getAllParksByPage(request.getPage(),request.getRows(),tParkExample);
     }
 
     @PostMapping("/save")
@@ -99,7 +99,7 @@ public class TParkController {
     @PreAuthorize("hasAuthority('sys:park:do')")
     public PageResult getParksDo(PageTableRequest request) {
         request.countOffset();
-        return tParkService.getParksDo(request.getOffset(),request.getRows());
+        return tParkService.getParksDo(request.getPage(),request.getRows());
     }
 
     @PostMapping("/dashboard")

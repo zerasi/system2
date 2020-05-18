@@ -87,7 +87,7 @@ public class TOrderController {
         tOrderExample.createCriteria().andUser_idEqualTo(loginUser.getId().intValue());
 
         request.countOffset();
-        return tOrderService.getAllOrderByUserId(request.getOffset(),request.getRows(),tOrderExample);
+        return tOrderService.getAllOrderByUserId(request.getPage(),request.getRows(),tOrderExample);
     }
 
     @PostMapping("/listByPage")
@@ -96,7 +96,7 @@ public class TOrderController {
     @ResponseBody
     public PageResult getAllOrder(PageTableRequest request){
         request.countOffset();
-        return tOrderService.getAllOrder(request.getOffset(),request.getRows());
+        return tOrderService.getAllOrder(request.getPage(),request.getRows());
     }
 
 }

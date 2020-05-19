@@ -46,7 +46,7 @@ public class TUserCarController {
         tUserCarExample.createCriteria().andUser_idEqualTo(loginUser.getId().intValue());
 
         request.countOffset();
-        return tUserCarService.getUserCars(request.getPage(),request.getRows(),tUserCarExample);
+        return tUserCarService.getUserCars(request.getPage()-1,request.getRows(),tUserCarExample);
     }
 
     @PostMapping("/save")

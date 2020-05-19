@@ -54,7 +54,7 @@ public class UserController {
 	@PreAuthorize("hasAuthority('sys:user:query')")
 	public PageResult getUsers(PageTableRequest request) {
 		request.countOffset();
-		return userService.getAllUsersByPage(request.getPage(),request.getRows());
+		return userService.getAllUsersByPage(request.getPage()-1,request.getRows());
 	}
 
 	@GetMapping(value = "/add")

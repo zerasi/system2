@@ -27,22 +27,21 @@
              Ztree菜单通用配置
              */
                 //changeTheme('metro');
-            var setting = {
-                    data: {
-                        simpleData: { // 简单数据
-                            enable: true,
-                            pIdKey: "parentId"
-                        }
-                    },
-                    callback: {
-                        onClick: onClick
-                    }
-                };
+            var setting = { callback : {
+                        onClick : onClick
+                    }};
 
             // 基本功能菜单加载
             //permission/listAllPermissionByLoginUserId
-           $.get("permission/listAllPermissionByLoginUserId",function(data){
-                $.fn.zTree.init($("#treeMenu"), setting, data);
+           $.get("permission/listAllPermissionByLoginUserId",function(datas){
+               /*dataPan1 treeMenu1*/
+               // $.fn.zTree.init($("#treeMenu"), setting, data);
+               if(datas.code == 200){
+                   $.each(datas.data,function(i,item){
+                       $("#dataPan1"+item.name).fadeIn();
+                       $.fn.zTree.init($("#treeMenu"+item.name), setting, item.arrayJson);
+                   });
+               }
             },"json");
 
             // 页面加载后 右下角 弹出窗口
@@ -201,15 +200,27 @@
     </div>
 </div>
 <div data-options="region:'west',split:true,title:'菜单导航'" style="width:200px">
-    <div class="easyui-accordion" fit="true" border="false">
-        <div title="基本功能" data-options="iconCls:'icon-mini-add'" style="overflow:auto">
-            <ul id="treeMenu" class="ztree"></ul>
+    <div class="easyui-accordion" fit="true" border="false" id="menu_tree">
+        <div title="数据监控中心" data-options="iconCls:'icon-mini-add'" style="overflow:auto;display: none;" id="dataPan1">
+            <ul id="treeMenu1" class="ztree"></ul>
+        </div>
+        <div title="进出场模拟" data-options="iconCls:'icon-mini-add'" style="overflow:auto;display: none;" id="dataPan2">
+            <ul id="treeMenu2" class="ztree"></ul>
+        </div>
+        <div title="用户信息管理" data-options="iconCls:'icon-mini-add'" style="overflow:auto;display: none;" id="dataPan3">
+            <ul id="treeMenu3" class="ztree"></ul>
+        </div>
+        <div title="系统信息管理" data-options="iconCls:'icon-mini-add'" style="overflow:auto;display: none;" id="dataPan4">
+            <ul id="treeMenu4" class="ztree"></ul>
+        </div>
+        <div title="个人用户服务" data-options="iconCls:'icon-mini-add'" style="overflow:auto;display: none;" id="dataPan5">
+            <ul id="treeMenu5" class="ztree"></ul>
         </div>
     </div>
 </div>
 <div data-options="region:'center'">
     <div id="tabs" fit="true" class="easyui-tabs" border="false">
-        <div title="监控中心" id="subWarp" style="width:100%;height:100%;overflow:hidden">
+        <div title="首页" id="subWarp" style="width:100%;height:100%;overflow:hidden">
             <iframe th:src="@{/home.html}" style="width:100%;height:100%;border:0;"></iframe>
         </div>
     </div>

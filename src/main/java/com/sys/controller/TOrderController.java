@@ -55,6 +55,19 @@ public class TOrderController {
             return Results.failure();
         }
     }
+    @PostMapping("/startBylicense_plate")
+    @ApiOperation(value = "模拟车辆驶入，输入车牌号码", notes = "模拟车辆驶入，输入车牌号码")//描述
+    @ResponseBody
+    @PreAuthorize("hasAuthority('sys:park:do')")
+    public Results startBylicense_plate(@RequestParam("license_plate") String license_plate, @RequestParam("park_id") Integer park_id){
+        try {
+            Results results = this.tOrderService.startBylicensePlate(license_plate, park_id);
+            return results;
+        }catch (Exception e){
+            e.printStackTrace();
+            return Results.failure();
+        }
+    }
 
     /**
      * 删除

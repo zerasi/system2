@@ -63,6 +63,25 @@
                 }
             });
 
+            $("#save1").click(function(){
+                if($("#img").form('validate')){
+                    var park_id = $("#park_id1").val();
+                    var license_plate = $("#license_plate").val();
+                    $.post("/order/startBylicense_plate",{park_id:park_id,license_plate:license_plate},function(data){
+                        if (data.code == '200') {
+                            $.messager.alert("提示", data.msg,"info",function () {
+                                $('#grid').datagrid("reload");
+                                $('#standardWindow1').form('clear');
+                            });
+                        }else{
+                            $.messager.alert("提示", data.msg);
+                        }
+                        $("#standardWindow1").window("close");
+                    })
+
+                }
+            });
+
             // 1.基本参数设置
             var options = {
                 type: 'POST',     // 设置表单提交方式
@@ -115,6 +134,10 @@
         });
 
         //车辆驶入
+        function doPark_in_new(park_id){
+            $("#park_id1").val(park_id)
+            $("#standardWindow1").window("open");
+        }
         function doPark_in(park_id){
             $("#img").val('');
             $("#huixian").attr("src","");
@@ -201,6 +224,18 @@
                 }
                 return "";
             }
+        },{
+            field : 'null1',
+            title : '操作员输入车牌号',
+            width : 100,
+            align : 'center',formatter:function(data,row, index){
+                if(row.park_status=='1'){
+                    return '<a id="btn" href="#" onclick="doPark_in_new('+row.id+')">输入车辆进入</a>';
+                }else if(row.park_status=='3'){
+                    return '<a id="btn" href="#" onclick="doPark_in_new('+row.id+')">输入车辆进入</a>';
+                }
+                return "";
+            }
         }] ];
         function image2Base64(img) {
             var reader = new FileReader();
@@ -235,6 +270,34 @@
                     <td></td>
                     <td>
                         <a id="save" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">确定</a>
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+    </div>
+</div>
+<div class="easyui-window" title="输入车牌号码模拟车辆进场" id="standardWindow1" collapsible="false" minimizable="false" maximizable="false" modal="true" closed="true" style="width:700px;top:10px;left:200px">
+
+    <div region="center" style="overflow:auto;padding:5px;" border="false" action="/order/start">
+        <form id='formdata1'  method="post" enctype="multipart/form-data">
+            <table class="table-edit" width="80%" align="center">
+                <tr class="title">
+                    <td colspan="2">
+                        <input type="hidden" id="park_id1" name="park_id">
+                    </td>
+                </tr>
+                <tr>
+                    <td>车牌号</td>
+                    <td>
+                        <input type="text" name="park_name" id="license_plate"
+                               class="easyui-validatebox"  required="required"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <a id="save1" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">确定</a>
                     </td>
                 </tr>
 

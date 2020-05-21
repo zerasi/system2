@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<!-- 导入jquery核心类库 -->
+		<script type="text/javascript" th:src="@{/js/jquery-2.2.3.min.js}"></script>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+		<!--导入echars-->
+		<script type="text/javascript" th:src="@{/js/echarts-all.js}"></script>
+		<script type="text/javascript" th:inline="none">
+
+			function dashBord(park_type,park_type_name){
+				$.post("/park/dashboard",{park_type:park_type},function(data){
+					if(data.code==200){
+						// 基于准备好的dom，初始化echarts实例
+						var myChart = echarts.init(document.getElementById('main'+park_type));
+						option = {
+							tooltip: {
+								formatter: '{a} <br/>{b} : {c}%'
+							},
+							toolbox: {
+								feature: {
+									restore: {},
+									saveAsImage: {}
+								}
+							},
+							series: [
+								{
+									name: '使用率',
+									type: 'gauge',
+									detail: {formatter: '{value}%'},
+									data: [{value: data.msg, name: park_type_name}]
+								}
+							]
+						};
+						// 使用刚指定的配置项和数据显示图表。
+						myChart.setOption(option);
+					}
+				})
+			}
+
+			function statistics_park(flag,sub){
+				document.head.innerHTML
+				$.post("/park/statistics_park",{flag:flag},function(re_data){
+					if(re_data.code==200){
+						console.log(re_data);
+						// 基于准备好的dom，初始化echarts实例
+						var myChart = echarts.init(document.getElementById('main'+flag));
+						var option = {
+							title : {
+								text: sub,
+								x:'center'
+							},
+							xAxis: {
+								type: 'category',
+								data: ['00','01','02','03','04','05','06','07','08','09','10','11',
+									'12','13','14','15','16','17','18','19','20','21','22','23']
+							},
+							yAxis: {
+								type: 'value'
+							},
+							series: [{
+								data: re_data.data,
+								type: 'bar'
+							}]
+						};
+						// 使用刚指定的配置项和数据显示图表。
+						myChart.setOption(option);
+					}
+				})
+			}
+
+			function one(){
+				$("#two").fadeOut();
+				$("#one").fadeIn();
+			}
+			function two(){
+				$("#one").fadeOut();
+				$("#two").fadeIn();
+			}
+
+			function reload(){
+				location.reload();
+			}
+
+			$(function () {
+				dashBord(1,'小车车位使用情况');
+				dashBord(2,'大车车位使用情况');
+				statistics_park(3,"分时段统计进入车辆数(按小时)");
+				statistics_park(4,"分时段统计驶离车辆数(按小时)");
+
+			});
+		</script>
+	</head>
+
+	<body>
+	<div class="btn-group" role="group" style="float:right;margin-right: 10%;">
+		<button type="button" class="btn btn-default" onclick="one()">车位使用</button>
+		<button type="button" class="btn btn-default" onclick="two()">进出统计</button>
+		<button type="button" class="btn btn-default" onclick="reload()">刷新</button>
+	</div>
+		<div class="container" id="one">
+			<div class="col-sm-5 col-md-5">
+				<div id="main2" style="width: 600px;height:400px;display: inline-block;"></div>
+			</div>
+			<div class="col-sm-5 col-md-5">
+				<div id="main1" style="width: 600px;height:400px;display: inline-block;"></div>
+			</div>
+
+		</div>
+		<div class="container" id="two" style="display: none;">
+			<div class="col-sm-6 col-md-6">
+				<div id="main3" style="width: 600px;height:400px;display: inline-block;"></div>
+			</div>
+			<div class="col-sm-6 col-md-6">
+				<div id="main4" style="width: 600px;height:400px;display: inline-block;"></div>
+			</div>
+		</div>
+	</body>
+
+</html>

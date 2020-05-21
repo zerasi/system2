@@ -230,6 +230,90 @@ public class TOrderServiceImpl implements TOrderService {
         return new PageResult(pages.getTotal(), list);
     }
 
+    @Override
+    public Results startBylicensePlate(String license_plate, Integer park_id) {
+
+        TParkExample tParkExample = new TParkExample();
+        tParkExample.createCriteria().andLicense_plateEqualTo(license_plate);
+        List<TPark> list = this.tParkMapper.selectByExample(tParkExample);
+        if(list.size()>0){
+            //该车牌汽车已经在停车场了
+            return Results.failure(282102,"对不起，该车牌："+license_plate+"汽车已经在停车场了");
+        }
+
+        //查询该车牌是否有用户已经注册拥有 没有则注册为临时用户
+        TUserCarExample tUserCarExample = new TUserCarExample();
+        tUserCarExample.createCriteria().andLicense_plateEqualTo(license_plate);
+        List<TUserCar> userCarList = this.tUserCarMapper.selectByExample(tUserCarExample);
+        Integer userId = null;
+
+        TPark tPark_yd = this.tParkMapper.selectByPrimaryKey(park_id);
+        if(tPark_yd.getPark_status()!=null && tPark_yd.getPark_status().equals("3")){
+            //车位被预定
+            TUserCarExample tUserCarExample_yd = new TUserCarExample();
+            tUserCarExample_yd.createCriteria().andUser_idEqualTo(Integer.parseInt(tPark_yd.getBak1()));
+            //获取预定用户的车辆信息
+            AtomicBoolean flag = new AtomicBoolean(true);
+            List<TUserCar> userCarList_yd = this.tUserCarMapper.selectByExample(tUserCarExample_yd);
+            String finalLicense_plate = license_plate;
+            userCarList_yd.forEach(p ->{
+                if(p.getLicense_plate().equals(finalLicense_plate)){
+                    flag.set(false);
+                }
+            });
+            if(flag.get()){
+                SysUser sysUser_yd = this.userDao.getById(Long.parseLong(tPark_yd.getBak1()));
+                return Results.failure(282103,"车位已经被"+sysUser_yd.getUsername()+"预定，只可此用户车辆停入");
+            }
+        }
+
+        if(userCarList.size()<=0){
+            //注册临时用户 账号车牌号 密码111111
+            SysUser sysUser = new SysUser();
+            sysUser.setUsername(license_plate);
+            sysUser.setPassword(new BCryptPasswordEncoder().encode("111111"));
+            sysUser.setStatus(1);
+            sysUser.setCreateTime(new Date());
+            sysUser.setUpdateTime(new Date());
+
+            userDao.save(sysUser);
+            SysRoleUser sysRoleUser = new SysRoleUser();
+            sysRoleUser.setRoleId(2);//2临时用户 角色id
+            sysRoleUser.setUserId(sysUser.getId().intValue());
+            roleUserDao.save(sysRoleUser);
+
+            TUserCar tUserCar = new TUserCar();
+            tUserCar.setUser_id(sysUser.getId().intValue());
+            tUserCar.setLicense_plate(license_plate);
+            this.tUserCarMapper.insertSelective(tUserCar);
+
+            userId = sysUser.getId().intValue();
+        }else{
+            TUserCar tUserCar = userCarList.get(0);
+            userId = tUserCar.getUser_id();
+        }
+
+        TOrderDto tOrderDto = new TOrderDto();
+        tOrderDto.setPark_id(park_id);
+        tOrderDto.setLicense_plate(license_plate);
+        tOrderDto.setStart_date(new Date());
+        tOrderDto.setStatus_cd("1");
+        tOrderDto.setLicense_img(license_plate);
+        tOrderDto.setUser_id(userId);
+        this.tOrderMapper.insertSelective(tOrderDto);
+
+        //修改车位状态 改为2已占有
+        TPark tPark = new TPark();
+        tPark.setId(park_id);
+        tPark.setPark_status("2");
+        tPark.setLicense_plate(license_plate);
+        tPark.setOrder_id(tOrderDto.getId());
+        this.tParkMapper.updateByPrimaryKeySelective(tPark);
+
+
+        return Results.success();
+    }
+
     public static void main(String[] args) {
         String str = "[{'key':2,'name':'张三'},{'key':1,'name':'张三2'}]";
         JSONArray jsonArray = JSON.parseArray(str);

@@ -37,7 +37,7 @@ public class PermissionController {
     @RequestMapping(value = "/listAllPermissionByLoginUserId", method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "获取登录用户权限菜单", notes = "获取登录用户权限菜单")//描述
-    public List<SysPermission> listAllPermissionByLoginUserId() {
+    public Results listAllPermissionByLoginUserId() {
         LoginUser loginUser = (LoginUser)SecurityUtils.getCurrentUserAuthentication().getPrincipal();
         return permissionService.listAllPermissionByLoginUserId(loginUser.getId().intValue());
     }

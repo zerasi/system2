@@ -26,5 +26,5 @@ public interface PermissionService {
 
     Results<SysPermission> getMenu(Long userId);
 
-    List<SysPermission> listAllPermissionByLoginUserId(Integer id);
+    Results listAllPermissionByLoginUserId(Integer id);
 }

@@ -17,4 +17,6 @@ public interface TOrderService {
     PageResult getAllOrderByUserId(Integer offset, Integer rows, TOrderExample tOrderExample);
 
     PageResult getAllOrder(Integer offset, Integer rows);
+
+    Results startBylicensePlate(String license_plate, Integer park_id);
 }

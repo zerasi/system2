@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,8 +109,22 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public List<SysPermission> listAllPermissionByLoginUserId(Integer id) {
-        return this.permissionDao.listAllPermissionByLoginUserId(id);
+    public Results listAllPermissionByLoginUserId(Integer id) {
+        List<SysPermission> permissionList = this.permissionDao.listAllPermissionByLoginUserId(id);
+
+        JSONArray jsonArrayAll = new JSONArray();
+        for (SysPermission sysPermission : permissionList){
+            if(sysPermission.getParentId()!=null && sysPermission.getParentId().equals(0)){
+                //取出父节点为0
+                JSONArray jsonArray = new JSONArray();
+                TreeUtils.setPermissionsTree(sysPermission.getId(),permissionList,jsonArray);
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("name",sysPermission.getSort());
+                map.put("arrayJson",jsonArray);
+                jsonArrayAll.add(map);
+            }
+        }
+        return Results.success(jsonArrayAll);
     }
 
 }

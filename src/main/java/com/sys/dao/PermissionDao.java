@@ -37,7 +37,7 @@ public interface PermissionDao {
             "sru.userId = #{userId}")
     List<SysPermission> listByUserId(@Param("userId") Long userId);
 
-    @Select("SELECT DISTINCT t5.id,t5.parentId,t5.name,t5.href FROM sys_user t1 INNER JOIN sys_role_user t2 ON t1.id = t2.userId " +
+    @Select("SELECT DISTINCT t5.id,t5.parentId,t5.name,t5.href,t5.sort FROM sys_user t1 INNER JOIN sys_role_user t2 ON t1.id = t2.userId " +
             "INNER JOIN sys_role t3 ON t2.roleId = t3.id INNER JOIN sys_role_permission t4 ON t4.roleId = t3.id " +
             "INNER JOIN sys_permission t5 ON t4.permissionId = t5.id WHERE t1.id = #{id} " +
             "AND t5.type = 1 ORDER BY t5.sort")
